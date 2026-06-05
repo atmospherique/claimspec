@@ -80,7 +80,7 @@ Discovery schema refs: `supabase/migrations/00001_initial_schema.sql` (objects),
 ## Resolution (applied in v0.1.0-alpha.2)
 
 1. **`Event.review_ref`** — ✅ **ADDED** (optional; Art. 50(4); unions into `Disclosure.sources`). The reference implementation had the better primitive; the spec adopted it.
-2. **`family` as derived** — ⏸ **HELD** for the **second implementer** (Builder's lean embed) to confirm against a flat-`event_type` model before the schema changes. Flagged provisional in §6.2; do not depend on `family` being authoritative.
+2. **`family` as derived** — ✅ **RESOLVED in v0.1.0-alpha.3.** The second implementer (Builder's lean embed) confirmed it: Builder stores flat audit `category` + `action.type` and derives `family` via a `category → family` table, exactly as Discovery derives it from `event_type`. `family` is now non-authoritative, not stored, and removed from `Event.required`.
 3. **Extension convention** — ✅ **ADDED** as §11 (`x-` namespaced keys, validator-ignored, non-authoritative). Discovery's `confidence_signals`, `relationships`, `maturity`, and domain fields are now *declared* extensions rather than ad-hoc — core stays thin.
 
 Everything else conforms as-is. The act of building Discovery's ClaimSpec projection (REST/MCP egress) is the executable conformance test; **Builder is the second implementer that confirms `family`.**

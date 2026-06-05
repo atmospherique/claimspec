@@ -1,6 +1,6 @@
 # ClaimSpec v0 — Specification
 
-**Version:** v0.1.0-alpha · **Schema:** [`schema.json`](./schema.json) (JSON Schema Draft 2020-12)
+**Version:** v0.1.0-alpha.3 · **Schema:** [`schema.json`](./schema.json) (JSON Schema Draft 2020-12)
 **Status:** under active design; not stable. **License:** CC-BY-4.0 (this document).
 
 ---
@@ -117,9 +117,9 @@ Implementations **MUST** enforce: record-types carry `register: record`; inferen
 
 ### 6.2 Events — five families
 
-Every event belongs to one of five **behavioural families**: `genesis` · `production` · `epistemic` · `relational` · `lifecycle`. Two acts are first-class for the model: `superseded` (§4) and `egress_disclosed` (§7). An Event carries: `id`, `family`, `type`, `subject` (the Claim id acted on), `actor` (§6.4), `inputs` (§6.3), `at` (timestamp), and an optional `review_ref` (§6.5).
+Every event belongs to one of five **behavioural families**: `genesis` · `production` · `epistemic` · `relational` · `lifecycle`. Two acts are first-class for the model: `superseded` (§4) and `egress_disclosed` (§7). An Event carries: `id`, `type`, `subject` (the Claim id acted on), `actor` (§6.4), `inputs` (§6.3), `at` (timestamp), an optional `review_ref` (§6.5), and an optional **derived** `family`.
 
-> **Provisional (under review with the second implementer):** whether `family` is a *stored* field or a value *derived* from `type` is being confirmed against a flat-`event_type` implementer (see `conformance/discovery-mapping.md`). v0 currently treats it as stored; this may relax to "derived, non-authoritative" in a later alpha. Do not depend on it being authoritative.
+> **Resolved in v0.1.0-alpha.3 (two implementers confirmed):** `family` is **derived from `type`, non-authoritative** — a coarse query-ergonomics hint, **not a stored field** and **not required.** Both reference implementers store flat event types and assign `family` at the projection (Mission HUD Discovery via `event_type`; Mission HUD Builder via the audit-log `category` → `family` table — see `conformance/discovery-mapping.md`). An implementation MUST NOT depend on `family` being present or authoritative; the authoritative act type is `type`. Publishing a `type → family` mapping is RECOMMENDED for cross-tool query consistency.
 
 ### 6.3 Two input edges
 
@@ -137,6 +137,8 @@ A single "actor type" was secretly doing three independent jobs; they vary indep
 | **Mechanism** | `actor_type` (`user` / `ai_agent` / `system`) | *how* it ran | (operational) |
 | **Agency** | `actor_agency` (`human` / `ai` / `hybrid`) | *who is responsible* | **EU AI Act Art. 50** |
 | **Identity** | `actor_id` (+ `model_used`) | *which specific* actor | ownership / audit (**Art. 12**) |
+
+> **Open question (raised by the second implementer, v0.1.0-alpha.3):** the Agency enum (`human` / `ai` / `hybrid`) has no value for a **purely mechanical system act with no epistemic content** (a session-start, a scheduled job) — an act that is neither human-responsible nor AI-reasoned. The Mission HUD Builder projection currently maps such acts to `ai` (machine, non-human), which slightly over-states AI involvement in the §7 sticky-upward disclosure. A candidate `automated` (or `system`) agency value is under consideration; it is **deferred** pending a third implementer and a decision on how it participates in the disclosure disjunction (most likely: `automated` does **not** set `ai_involved`). Until then, project mechanical system acts to `ai` and rely on `actor_type = system` to disambiguate.
 
 ---
 

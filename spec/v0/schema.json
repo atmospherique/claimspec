@@ -3,7 +3,7 @@
   "$id": "https://claimspec.org/spec/v0/schema.json",
   "title": "ClaimSpec v0",
   "description": "Canonical schema for claims, lineage events, actors, and disclosure. See spec.md for normative rationale.",
-  "version": "0.1.0-alpha.2",
+  "version": "0.1.0-alpha.3",
   "type": "object",
   "properties": {
     "claimspec": {
@@ -74,7 +74,7 @@
     "EventFamily": {
       "type": "string",
       "enum": ["genesis", "production", "epistemic", "relational", "lifecycle"],
-      "description": "Behavioural family of the act. spec.md §6.2."
+      "description": "Behavioural family of the act. DERIVED from `type`, non-authoritative — an optional query-ergonomics hint, not a stored truth. Implementations with flat event types assign it at the projection. spec.md §6.2."
     },
     "Event": {
       "type": "object",
@@ -97,7 +97,7 @@
         "review_ref": { "type": "string", "description": "Human-control / review record id (EU AI Act Art. 50(4)); unions into Disclosure.sources at egress. spec.md §6.4, §7." }
       },
       "patternProperties": { "^x-": { "$comment": "Extension namespace (spec.md §11)." } },
-      "required": ["id", "family", "type", "subject", "actor", "at"]
+      "required": ["id", "type", "subject", "actor", "at"]
     },
     "Actor": {
       "type": "object",

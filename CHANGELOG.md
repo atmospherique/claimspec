@@ -3,6 +3,27 @@
 All notable changes to ClaimSpec are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/); the spec uses Semantic Versioning.
 
+## [0.1.0-alpha.3] — 2026-06-05
+
+Second-implementer reconciliation (Mission HUD Builder — a read-only ClaimSpec
+projection over its audit-log + cards + git-as-board substrate). Builder stores
+flat event types and has no native Agency axis, so it is the flat-model
+implementer the alpha.2 `family` question was held for. No invariant moved.
+
+### Changed
+- **`family` is now DERIVED, non-authoritative, and not required.** Removed from
+  `Event.required`; redescribed as an optional `type`-derived query hint. Two
+  independent implementers (Discovery via `event_type`, Builder via the audit
+  `category → family` table) both assign it at the projection, never store it.
+  Resolves the alpha.2 held question. `type` is the authoritative act type.
+
+### Open (deferred)
+- **Agency enum gap (raised by Builder).** `human|ai|hybrid` has no value for a
+  purely mechanical system act with no epistemic content (projected to `ai`
+  today, slightly over-stating AI involvement at egress). A candidate
+  `automated`/`system` value — and whether it sets `ai_involved` — is deferred
+  pending a third implementer. Documented in spec.md §6.4.
+
 ## [0.1.0-alpha.2] — 2026-06-05
 
 First implementer reconciliation (Mission HUD Discovery — see
